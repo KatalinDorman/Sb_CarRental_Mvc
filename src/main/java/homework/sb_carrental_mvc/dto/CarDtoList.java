@@ -19,4 +19,7 @@ public class CarDtoList {
         this.startDate = startDate;
         this.endDate = endDate;
     }
+
+    public CarDtoList() {
+    }
 }

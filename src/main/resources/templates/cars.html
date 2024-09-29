@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>Cars</title>
+</head>
+<body>
+<h3>Available cars for the chosen period</h3>
+<input type="hidden" th:value="${carDtoList.getStartDate()}">
+</br>
+<input type="hidden" th:value="${carDtoList.getEndDate()}">
+<table>
+    <thead>
+    <tr>
+        <td>Car id</td>
+        <td>Car type</td>
+        <td>Price/Day HUF</td>
+    </tr>
+    </thead>
+    <tbody th:each="carDto : ${carDtoList.getCarDtoList()}">
+    <tr>
+        <td th:text="${carDto.getId()}"></td>
+        <td th:text="${carDto.getType()}"></td>
+        <td th:text="${carDto.getPrice()}"></td>
+        <td>
+            <input type="submit" value="Start reservation"/>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>
