@@ -1,15 +1,17 @@
 package homework.sb_carrental_mvc.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
 @Entity
 @Table(name = "reservations")
+@AllArgsConstructor
+@NoArgsConstructor
 @Getter
-@Setter
 public class Reservation {
 
     @Id
@@ -38,6 +40,6 @@ public class Reservation {
     @Column(name = "enddate")
     private LocalDate endDate;
 
-    @Column(name = "price")
+    @Column(name = "fullPrice")
     private int fullPrice;
 }

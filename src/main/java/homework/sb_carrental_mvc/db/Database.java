@@ -1,12 +1,12 @@
 package homework.sb_carrental_mvc.db;
 
-import homework.sb_carrental_mvc.dto.CarDto;
+import homework.sb_carrental_mvc.model.Car;
+import homework.sb_carrental_mvc.model.Reservation;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.query.Query;
-import org.hibernate.query.sql.internal.SQLQueryParser;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
@@ -24,8 +24,8 @@ public class Database {
         sessionFactory = cfg.buildSessionFactory();
     }
 
-    public List<CarDto> getAvailableCarDtos(LocalDate startDate, LocalDate endDate) {
-        List<CarDto> carDtos = null;
+    public List<Car> getAvailableCarList(LocalDate startDate, LocalDate endDate) {
+        List<Car> carList = null;
 
         Session session = sessionFactory.openSession();
         Transaction tx = session.beginTransaction();
@@ -44,16 +44,40 @@ public class Database {
                                 (SELECT r.carId
                                  FROM Reservation r
                                  WHERE (?2 BETWEEN r.startDate AND r.endDate)
-                                 AND (?3 BETWEEN r.startDate AND r.endDate)))
+                                 OR (?3 BETWEEN r.startDate AND r.endDate)))
                         """);
         query.setParameter(1, true);
         query.setParameter(2, startDate);
         query.setParameter(3, endDate);
-        carDtos = query.getResultList();
+        carList = query.getResultList();
 
         tx.commit();
         session.close();
 
-        return carDtos;
+        return carList;
+    }
+
+    public Car getCarById(int id) {
+        Car car = null;
+
+        Session session = sessionFactory.openSession();
+        Transaction tx = session.beginTransaction();
+
+        car = session.get(Car.class, id);
+
+        tx.commit();
+        session.close();
+
+        return car;
+    }
+
+    public void saveNewReservation(Reservation reservation) {
+        Session session = sessionFactory.openSession();
+        Transaction tx = session.beginTransaction();
+
+        session.persist(reservation);
+
+        tx.commit();
+        session.close();
     }
 }
