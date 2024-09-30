@@ -123,4 +123,26 @@ public class Database {
         tx.commit();
         session.close();
     }
+
+    public List<Car> getAllReservedCars() {
+        List<Car> carList = null;
+
+        Session session = sessionFactory.openSession();
+        Transaction tx = session.beginTransaction();
+
+        Query query = session.createQuery(
+                """
+                        SELECT c
+                        FROM Car c
+                        WHERE c.id IN
+                             (SELECT r.carId
+                              FROM Reservation r)
+                        """);
+        carList = query.getResultList();
+
+        tx.commit();
+        session.close();
+
+        return carList;
+    }
 }

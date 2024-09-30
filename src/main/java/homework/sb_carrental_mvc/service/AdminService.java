@@ -84,4 +84,18 @@ public class AdminService {
 
         db.saveCar(car);
     }
+
+    public List<Integer> getAllReservedCarIds() {
+        List<Integer> carIdList = new ArrayList<>();
+
+        List<Car> carList = db.getAllReservedCars();
+
+        if (carList.size() > 0) {
+            for (Car car : carList) {
+                carIdList.add(car.getId());
+            }
+        }
+
+        return carIdList;
+    }
 }

@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.List;
+
 @Controller
 @AllArgsConstructor
 public class AdminController {
@@ -21,6 +23,9 @@ public class AdminController {
 
         AdminDto adminDto = adminService.getAdminDto();
 
+        List<Integer> reservedCarIdList = adminService.getAllReservedCarIds();
+
+        model.addAttribute("reservedCarIdList", reservedCarIdList);
         model.addAttribute("adminDto", adminDto);
 
         return "admin.html";
