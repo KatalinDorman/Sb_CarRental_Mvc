@@ -36,15 +36,10 @@ public class Database {
                         FROM Car c
                         WHERE c.available = ?1
                         AND c.id NOT IN
-                            (SELECT r.carId  FROM Reservation r)
-                        OR c.id IN
                             (SELECT r.carId
-                            FROM Reservation r
-                            WHERE r.carId NOT IN
-                                (SELECT r.carId
-                                 FROM Reservation r
-                                 WHERE (?2 BETWEEN r.startDate AND r.endDate)
-                                 OR (?3 BETWEEN r.startDate AND r.endDate)))
+                             FROM Reservation r
+                             WHERE (?2 BETWEEN r.startDate AND r.endDate)
+                             OR (?3 BETWEEN r.startDate AND r.endDate))
                         """);
         query.setParameter(1, true);
         query.setParameter(2, startDate);
