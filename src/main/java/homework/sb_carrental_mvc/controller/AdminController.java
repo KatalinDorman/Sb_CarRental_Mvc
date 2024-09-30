@@ -1,11 +1,14 @@
 package homework.sb_carrental_mvc.controller;
 
 import homework.sb_carrental_mvc.dto.AdminDto;
+import homework.sb_carrental_mvc.dto.CarDto;
 import homework.sb_carrental_mvc.service.AdminService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @AllArgsConstructor
@@ -21,5 +24,78 @@ public class AdminController {
         model.addAttribute("adminDto", adminDto);
 
         return "admin.html";
+    }
+
+    @PostMapping("/admin/newcar")
+    public String saveNewCar(Model model,
+                             @RequestParam(name = "type") String type,
+                             @RequestParam(name = "isAvailable") String isAvailable,
+                             @RequestParam(name = "price") int price) {
+
+        boolean available = false;
+        String returnPage = "";
+
+        if (isAvailable.equals("-")) {
+            model.addAttribute("errorMsg", "Please select answer if the car is available.");
+            loadAdminPage(model);
+            returnPage = "admin.html";
+        } else {
+
+            if (isAvailable.equals("Yes")) {
+                available = true;
+            }
+
+            CarDto carDto = adminService.getCarDto(0, type, available, price);
+            adminService.saveCarDto(carDto);
+
+            model.addAttribute("carDto", carDto);
+            returnPage = "newcar.html";
+        }
+
+        return returnPage;
+    }
+
+    @GetMapping("/admin/editcar")
+    public String loadEditPage(Model model,
+                               @RequestParam(name = "carId") int id) {
+
+        CarDto carDto = adminService.getCarDtoById(id);
+
+        model.addAttribute("carDto", carDto);
+
+        return "editCar.html";
+    }
+
+    @PostMapping("/admin/editcar/commit")
+    public String saveEditedCar(Model model,
+                                @RequestParam(name = "carId") int id,
+                                @RequestParam(name = "type") String type,
+                                @RequestParam(name = "isAvailable") String isAvailable,
+                                @RequestParam(name = "price") int price) {
+
+        boolean available = false;
+        String returnPage = "";
+
+        if (isAvailable.equals("-")) {
+            model.addAttribute("errorMsg", "Please select answer if the car is available.");
+            loadAdminPage(model);
+            returnPage = "edit.html";
+        } else {
+
+            if (isAvailable.equals("Yes")) {
+                available = true;
+            }
+
+            CarDto carDto = adminService.getCarDtoById(id);
+            carDto.setType(type);
+            carDto.setAvailable(available);
+            carDto.setPrice(price);
+            adminService.saveCarDto(carDto);
+
+            model.addAttribute("carDto", carDto);
+            returnPage = "newcar.html";
+        }
+
+        return returnPage;
     }
 }

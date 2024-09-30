@@ -109,4 +109,18 @@ public class Database {
 
         return reservationList;
     }
+
+    public void saveCar(Car car) {
+        Session session = sessionFactory.openSession();
+        Transaction tx = session.beginTransaction();
+
+        if (car.getId() == 0) {
+            session.persist(car);
+        } else {
+            session.merge(car);
+        }
+
+        tx.commit();
+        session.close();
+    }
 }

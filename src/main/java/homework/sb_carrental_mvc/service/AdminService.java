@@ -70,4 +70,18 @@ public class AdminService {
 
         return carDto;
     }
+
+    public CarDto getCarDto(Integer id, String type, boolean available, int price) {
+        CarDto carDto = null;
+
+        carDto = new CarDto(id, type, available, price);
+
+        return carDto;
+    }
+
+    public void saveCarDto(CarDto carDto) {
+        Car car = new Car(carDto.getId(), carDto.getType(), carDto.isAvailable(), carDto.getPrice());
+
+        db.saveCar(car);
+    }
 }
