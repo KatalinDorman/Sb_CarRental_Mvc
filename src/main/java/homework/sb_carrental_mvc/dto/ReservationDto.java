@@ -9,6 +9,7 @@ import java.time.LocalDate;
 @Getter
 public class ReservationDto {
 
+    private Integer id;
     private CarDto carDto;
     private LocalDate startDate;
     private LocalDate endDate;

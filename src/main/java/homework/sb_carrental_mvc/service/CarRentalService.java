@@ -45,18 +45,18 @@ public class CarRentalService {
         return carDto;
     }
 
-    public ReservationDto getReservationDto(CarDto carDto, LocalDate startDate, LocalDate endDate, String name,
-                                            String email, String address, String phone, Integer fullPrice) {
+    public ReservationDto getReservationDto(Integer id, CarDto carDto, LocalDate startDate, LocalDate endDate,
+                                            String name, String email, String address, String phone, Integer fullPrice) {
         ReservationDto reservationDto = null;
 
-        reservationDto = new ReservationDto(carDto, startDate, endDate, name, email, address, phone, fullPrice);
+        reservationDto = new ReservationDto(id, carDto, startDate, endDate, name, email, address, phone, fullPrice);
 
         return reservationDto;
     }
 
     public void saveReservationDto(ReservationDto reservationDto) {
 
-        Reservation reservation = new Reservation(0,
+        Reservation reservation = new Reservation(reservationDto.getId(),
                 reservationDto.getCarDto().getId(),
                 reservationDto.getName(),
                 reservationDto.getEmail(),

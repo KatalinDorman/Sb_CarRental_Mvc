@@ -9,6 +9,7 @@ import java.util.List;
 @Getter
 public class AdminDto {
 
-    private List<ReservationDto> reservationDtoList;
     private List<CarDto> carDtoList;
+    private List<ReservationDto> reservationDtoList;
+
 }

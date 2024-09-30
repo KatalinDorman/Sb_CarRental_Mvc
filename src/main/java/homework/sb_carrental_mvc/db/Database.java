@@ -75,4 +75,38 @@ public class Database {
         tx.commit();
         session.close();
     }
+
+    public List<Car> getAllCars() {
+        Session session = sessionFactory.openSession();
+        Transaction tx = session.beginTransaction();
+
+        Query query = session.createQuery(
+                """
+                        SELECT c
+                        FROM Car c
+                        """);
+        List<Car> carList = query.getResultList();
+
+        tx.commit();
+        session.close();
+
+        return carList;
+    }
+
+    public List<Reservation> getAllReservations() {
+        Session session = sessionFactory.openSession();
+        Transaction tx = session.beginTransaction();
+
+        Query query = session.createQuery(
+                """
+                        SELECT r
+                        FROM Reservation r
+                        """);
+        List<Reservation> reservationList = query.getResultList();
+
+        tx.commit();
+        session.close();
+
+        return reservationList;
+    }
 }

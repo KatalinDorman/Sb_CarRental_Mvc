@@ -45,7 +45,7 @@ public class CarRentalController {
 
         carDto = carRentalService.getCarDtoById(carId);
 
-        ReservationDto reservationDto = carRentalService.getReservationDto(carDto, startDate, endDate, null,
+        ReservationDto reservationDto = carRentalService.getReservationDto(null,carDto, startDate, endDate, null,
                 null, null, null, null);
 
         model.addAttribute("reservationDto", reservationDto);
@@ -67,7 +67,7 @@ public class CarRentalController {
         carDto = carRentalService.getCarDtoById(carId);
         int fullPrice = carRentalService.calculateFullPrice(startDate, endDate, carDto.getPrice());
 
-        ReservationDto reservationDto = carRentalService.getReservationDto(carDto, startDate, endDate, name, email,
+        ReservationDto reservationDto = carRentalService.getReservationDto(0,carDto, startDate, endDate, name, email,
                 address, phone, fullPrice);
 
         carRentalService.saveReservationDto(reservationDto);
