@@ -80,7 +80,10 @@
                 </label></br>
                 <input type="submit" value="Add"/>
             </form>
-            <p name="errorMsg" style="color: red" th:text="${errorMsg}"></p>
+            <p th:if="${carDto} != null">
+            <label name="errorMsg" style="color: red" th:if="${carDto.isNewCarSaved()}  == false">
+                Please select answer for availability!</label>
+            </p>
         </td>
     </tr>
 </table>

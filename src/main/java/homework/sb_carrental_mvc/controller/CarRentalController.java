@@ -1,6 +1,5 @@
 package homework.sb_carrental_mvc.controller;
 
-import homework.sb_carrental_mvc.dto.CarDto;
 import homework.sb_carrental_mvc.dto.CarDtoList;
 import homework.sb_carrental_mvc.dto.ReservationDto;
 import homework.sb_carrental_mvc.service.CarRentalService;
@@ -41,12 +40,8 @@ public class CarRentalController {
                                    @RequestParam(name = "startDate") LocalDate startDate,
                                    @RequestParam(name = "endDate") LocalDate endDate,
                                    @RequestParam(name = "carId") int carId) {
-        CarDto carDto = null;
 
-        carDto = carRentalService.getCarDtoById(carId);
-
-        ReservationDto reservationDto = carRentalService.getReservationDto(null,carDto, startDate, endDate, null,
-                null, null, null, null);
+        ReservationDto reservationDto = carRentalService.prepareReservationDto(startDate, endDate, carId);
 
         model.addAttribute("reservationDto", reservationDto);
 
@@ -62,15 +57,9 @@ public class CarRentalController {
                                  @RequestParam(name = "email") String email,
                                  @RequestParam(name = "address") String address,
                                  @RequestParam(name = "phone") String phone) {
-        CarDto carDto = null;
 
-        carDto = carRentalService.getCarDtoById(carId);
-        int fullPrice = carRentalService.calculateFullPrice(startDate, endDate, carDto.getPrice());
-
-        ReservationDto reservationDto = carRentalService.getReservationDto(0,carDto, startDate, endDate, name, email,
-                address, phone, fullPrice);
-
-        carRentalService.saveReservationDto(reservationDto);
+        ReservationDto reservationDto = carRentalService.getReservationDto(carId, startDate, endDate, name, email,
+                address, phone);
 
         model.addAttribute("reservationDto", reservationDto);
 

@@ -13,4 +13,12 @@ public class CarDto {
     private String type;
     private boolean available;
     private int price;
+    private boolean newCarSaved;
+
+    public CarDto(Integer id, String type, boolean available, int price) {
+        this.id = id;
+        this.type = type;
+        this.available = available;
+        this.price = price;
+    }
 }

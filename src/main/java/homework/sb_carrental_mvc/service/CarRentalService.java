@@ -21,14 +21,13 @@ public class CarRentalService {
     private Database db;
 
     public CarDtoList getAvailableCarsForChosenPeriod(LocalDate startDate, LocalDate endDate) {
-        CarDtoList carDtoList;
+        CarDtoList carDtoList = null;
         List<CarDto> availableCarDtoList = new ArrayList<>();
 
         List<Car> availableCarList = db.getAvailableCarList(startDate, endDate);
 
         for (Car car : availableCarList) {
-            CarDto carDto = new CarDto(car.getId(), car.getType(), car.isAvailable(), car.getPrice());
-            availableCarDtoList.add(carDto);
+            availableCarDtoList.add(convertCarToCarDto(car));
         }
 
         carDtoList = new CarDtoList(availableCarDtoList, startDate, endDate);
@@ -36,25 +35,33 @@ public class CarRentalService {
         return carDtoList;
     }
 
-    public CarDto getCarDtoById(int carId) {
+    private CarDto getCarDtoById(int carId) {
         CarDto carDto = null;
         Car car = db.getCarById(carId);
 
-        carDto = new CarDto(car.getId(), car.getType(), car.isAvailable(), car.getPrice());
+        carDto = convertCarToCarDto(car);
 
         return carDto;
     }
 
-    public ReservationDto getReservationDto(Integer id, CarDto carDto, LocalDate startDate, LocalDate endDate,
-                                            String name, String email, String address, String phone, Integer fullPrice) {
+
+    public ReservationDto getReservationDto(int carId, LocalDate startDate, LocalDate endDate,
+                                            String name, String email, String address, String phone) {
+        CarDto carDto = null;
+
+        carDto = getCarDtoById(carId);
+        int fullPrice = calculateFullPrice(startDate, endDate, carDto.getPrice());
+
         ReservationDto reservationDto = null;
 
-        reservationDto = new ReservationDto(id, carDto, startDate, endDate, name, email, address, phone, fullPrice);
+        reservationDto = new ReservationDto(0, carDto, startDate, endDate, name, email, address, phone, fullPrice);
+
+        saveReservationDto(reservationDto);
 
         return reservationDto;
     }
 
-    public void saveReservationDto(ReservationDto reservationDto) {
+    private void saveReservationDto(ReservationDto reservationDto) {
 
         Reservation reservation = new Reservation(reservationDto.getId(),
                 reservationDto.getCarDto().getId(),
@@ -68,12 +75,31 @@ public class CarRentalService {
         db.saveNewReservation(reservation);
     }
 
-    public int calculateFullPrice(LocalDate startDate, LocalDate endDate, int price) {
+    private int calculateFullPrice(LocalDate startDate, LocalDate endDate, int price) {
         int fullPrice = 0;
         int daysBetweenStartAndEndDate = Math.toIntExact(ChronoUnit.DAYS.between(startDate, endDate));
 
         fullPrice = daysBetweenStartAndEndDate * price;
 
         return fullPrice;
+    }
+
+    public ReservationDto prepareReservationDto(LocalDate startDate, LocalDate endDate, int carId) {
+        CarDto carDto = null;
+
+        carDto = getCarDtoById(carId);
+
+        ReservationDto reservationDto = new ReservationDto(null, carDto, startDate, endDate, null, null,
+                null, null, null);
+
+        return reservationDto;
+    }
+
+    private CarDto convertCarToCarDto(Car car) {
+        CarDto carDto = null;
+
+        carDto = new CarDto(car.getId(), car.getType(), car.isAvailable(), car.getPrice());
+
+        return carDto;
     }
 }

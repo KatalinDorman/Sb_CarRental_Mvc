@@ -9,7 +9,7 @@
 <form action="/admin/editcar/commit" method="post">
     <input type="hidden" name="carId" th:value="${carDto.getId()}"/></br>
     <label>Type:
-        <input type="text" name="type" th:text="${carDto.getType()}"/>
+        <input type="text" name="type" th:placeholder="${carDto.getType()}"/>
     </label></br>
     <label>Is it available?
         <select name="isAvailable">
@@ -19,10 +19,11 @@
         </select>
     </label></br>
     <label>Price:
-        <input type="number" name="price" th:text="${carDto.getPrice()}"/>
+        <input type="number" name="price" th:placeholder="${carDto.getPrice()}"/>
     </label></br>
     <input type="submit" value="Save"/>
 </form>
-<p name="errorMsg" style="color: red" th:text="${errorMsg}"></p>
+<label name="errorMsg" style="color: red" th:if="${carDto.isNewCarSaved()}  == false">
+    Please select answer for availability!</label>
 </body>
 </html>

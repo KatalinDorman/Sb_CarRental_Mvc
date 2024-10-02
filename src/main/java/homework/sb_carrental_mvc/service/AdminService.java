@@ -31,10 +31,7 @@ public class AdminService {
 
         if (carList.size() > 0) {
             for (Car car : carList) {
-                CarDto carDto = new CarDto(car.getId(),
-                        car.getType(),
-                        car.isAvailable(),
-                        car.getPrice());
+                CarDto carDto = convertCarToCarDto(car);
                 carDtoList.add(carDto);
             }
             if (reservationList.size() > 0) {
@@ -66,36 +63,73 @@ public class AdminService {
         CarDto carDto = null;
         Car car = db.getCarById(carId);
 
-        carDto = new CarDto(car.getId(), car.getType(), car.isAvailable(), car.getPrice());
+        carDto = convertCarToCarDto(car);
 
         return carDto;
     }
 
-    public CarDto getCarDto(Integer id, String type, boolean available, int price) {
+    private CarDto getCarDto(Integer id, String type, boolean available, int price, boolean isNewCarSaved) {
         CarDto carDto = null;
 
-        carDto = new CarDto(id, type, available, price);
+        carDto = new CarDto(id, type, available, price, isNewCarSaved);
 
         return carDto;
     }
 
-    public void saveCarDto(CarDto carDto) {
+
+    public CarDto prepareCarDto(String type, String isAvailable, int price) {
+        boolean available = false;
+        boolean isNewCarSaved = false;
+
+        if (!isAvailable.equals("-")) {
+            isNewCarSaved = true;
+
+            available = isAvailable.equals("yes");
+        }
+
+        CarDto carDto = getCarDto(0, type, available, price, isNewCarSaved);
+
+        if (isNewCarSaved) {
+            saveCarDto(carDto);
+        }
+
+        return carDto;
+    }
+
+    public CarDto updateCarDto(int carId, String type, String isAvailable, int price) {
+        boolean available = false;
+        boolean isNewCarSaved = false;
+
+        if (!isAvailable.equals("-")) {
+            isNewCarSaved = true;
+
+            available = isAvailable.equals("yes");
+        }
+
+        CarDto carDto = getCarDtoById(carId);
+        carDto.setType(type);
+        carDto.setAvailable(available);
+        carDto.setPrice(price);
+        carDto.setNewCarSaved(isNewCarSaved);
+
+        if (isNewCarSaved) {
+            saveCarDto(carDto);
+        }
+
+        return carDto;
+    }
+
+    private void saveCarDto(CarDto carDto) {
         Car car = new Car(carDto.getId(), carDto.getType(), carDto.isAvailable(), carDto.getPrice());
 
         db.saveCar(car);
     }
 
-    public List<Integer> getAllReservedCarIds() {
-        List<Integer> carIdList = new ArrayList<>();
+    private CarDto convertCarToCarDto(Car car) {
+        CarDto carDto = null;
 
-        List<Car> carList = db.getAllReservedCars();
+        carDto = new CarDto(car.getId(), car.getType(), car.isAvailable(), car.getPrice());
 
-        if (carList.size() > 0) {
-            for (Car car : carList) {
-                carIdList.add(car.getId());
-            }
-        }
-
-        return carIdList;
+        return carDto;
     }
 }

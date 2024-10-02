@@ -10,8 +10,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.List;
-
 @Controller
 @AllArgsConstructor
 public class AdminController {
@@ -23,9 +21,6 @@ public class AdminController {
 
         AdminDto adminDto = adminService.getAdminDto();
 
-        List<Integer> reservedCarIdList = adminService.getAllReservedCarIds();
-
-        model.addAttribute("reservedCarIdList", reservedCarIdList);
         model.addAttribute("adminDto", adminDto);
 
         return "admin.html";
@@ -36,23 +31,15 @@ public class AdminController {
                              @RequestParam(name = "type") String type,
                              @RequestParam(name = "isAvailable") String isAvailable,
                              @RequestParam(name = "price") int price) {
-
-        boolean available = false;
         String returnPage = "";
 
-        if (isAvailable.equals("-")) {
-            model.addAttribute("errorMsg", "Please select answer if the car is available.");
+        CarDto carDto = adminService.prepareCarDto(type, isAvailable, price);
+
+        if (!carDto.isNewCarSaved()) {
             loadAdminPage(model);
+            model.addAttribute("carDto", carDto);
             returnPage = "admin.html";
         } else {
-
-            if (isAvailable.equals("Yes")) {
-                available = true;
-            }
-
-            CarDto carDto = adminService.getCarDto(0, type, available, price);
-            adminService.saveCarDto(carDto);
-
             model.addAttribute("carDto", carDto);
             returnPage = "newcar.html";
         }
@@ -68,7 +55,7 @@ public class AdminController {
 
         model.addAttribute("carDto", carDto);
 
-        return "editCar.html";
+        return "editcar.html";
     }
 
     @PostMapping("/admin/editcar/commit")
@@ -77,26 +64,15 @@ public class AdminController {
                                 @RequestParam(name = "type") String type,
                                 @RequestParam(name = "isAvailable") String isAvailable,
                                 @RequestParam(name = "price") int price) {
-
-        boolean available = false;
         String returnPage = "";
 
-        if (isAvailable.equals("-")) {
-            model.addAttribute("errorMsg", "Please select answer if the car is available.");
-            loadAdminPage(model);
-            returnPage = "edit.html";
-        } else {
+        CarDto carDto = adminService.updateCarDto(id, type, isAvailable, price);
 
-            if (isAvailable.equals("Yes")) {
-                available = true;
-            }
-
-            CarDto carDto = adminService.getCarDtoById(id);
-            carDto.setType(type);
-            carDto.setAvailable(available);
-            carDto.setPrice(price);
-            adminService.saveCarDto(carDto);
-
+        if (!carDto.isNewCarSaved()) {
+            model.addAttribute("carDto", carDto);
+            returnPage = "editcar.html";
+        }
+        else {
             model.addAttribute("carDto", carDto);
             returnPage = "newcar.html";
         }
