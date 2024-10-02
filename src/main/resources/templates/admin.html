@@ -46,6 +46,8 @@
                         <td>Type</td>
                         <td>Available</td>
                         <td>Price/Day HUF</td>
+                        <td>Image</td>
+                        <td>Click to edit</td>
                     </tr>
                     </thead>
                     <tbody th:each="carDto : ${adminDto.getCarDtoList()}">
@@ -54,6 +56,9 @@
                         <td th:text="${carDto.getType()}"></td>
                         <td th:text="${carDto.isAvailable()}"></td>
                         <td th:text="${carDto.getPrice()}"></td>
+                        <td>
+                            <img th:src="'data:image/jpeg;base64,' + ${carDto.getImageBase64()}" width="150">
+                        </td>
                         <td>
                             <button type="submit" name="carId" th:value="${carDto.getId()}">Edit</button>
                         </td>
@@ -64,7 +69,7 @@
         </td>
         <td>
             <h3>Add new car</h3>
-            <form action="/admin/newcar" method="post">
+            <form action="/admin/newcar" enctype="multipart/form-data" method="post">
                 <label>Type:
                     <input type="text" name="type"/>
                 </label></br>
@@ -78,11 +83,14 @@
                 <label>Price:
                     <input type="number" name="price"/>
                 </label></br>
+                <label>Image:
+                    <input type="file" name="file"/>
+                </label></br>
                 <input type="submit" value="Add"/>
             </form>
             <p th:if="${carDto} != null">
-            <label name="errorMsg" style="color: red" th:if="${carDto.isNewCarSaved()}  == false">
-                Please select answer for availability!</label>
+                <label name="errorMsg" style="color: red" th:if="${carDto.isNewCarSaved()}  == false">
+                    Please select answer for availability!</label>
             </p>
         </td>
     </tr>

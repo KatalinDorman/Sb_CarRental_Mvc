@@ -6,7 +6,7 @@
 </head>
 <body>
 <h3>Edit Car</h3>
-<form action="/admin/editcar/commit" method="post">
+<form action="/admin/editcar/commit" enctype="multipart/form-data" method="post">
     <input type="hidden" name="carId" th:value="${carDto.getId()}"/></br>
     <label>Type:
         <input type="text" name="type" th:placeholder="${carDto.getType()}"/>
@@ -20,6 +20,9 @@
     </label></br>
     <label>Price:
         <input type="number" name="price" th:placeholder="${carDto.getPrice()}"/>
+    </label></br>
+    <label>Image:
+        <input type="file" name="file"/>
     </label></br>
     <input type="submit" value="Save"/>
 </form>

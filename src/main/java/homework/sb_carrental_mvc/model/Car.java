@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Base64;
+
 @Entity
 @Table(name = "cars")
 @AllArgsConstructor
@@ -27,4 +29,8 @@ public class Car {
 
     @Column(name = "price")
     private int price;
+
+    @Lob
+    @Column(name = "image")
+    private byte[] image;
 }

@@ -98,7 +98,7 @@ public class CarRentalService {
     private CarDto convertCarToCarDto(Car car) {
         CarDto carDto = null;
 
-        carDto = new CarDto(car.getId(), car.getType(), car.isAvailable(), car.getPrice());
+        carDto = new CarDto(car.getId(), car.getType(), car.isAvailable(), car.getPrice(), car.getImage());
 
         return carDto;
     }

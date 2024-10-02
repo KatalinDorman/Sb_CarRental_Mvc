@@ -9,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 @Controller
 @AllArgsConstructor
@@ -30,10 +31,11 @@ public class AdminController {
     public String saveNewCar(Model model,
                              @RequestParam(name = "type") String type,
                              @RequestParam(name = "isAvailable") String isAvailable,
-                             @RequestParam(name = "price") int price) {
+                             @RequestParam(name = "price") int price,
+                             @RequestParam("file") MultipartFile file) {
         String returnPage = "";
 
-        CarDto carDto = adminService.prepareCarDto(type, isAvailable, price);
+        CarDto carDto = adminService.prepareCarDto(type, isAvailable, price, file);
 
         if (!carDto.isNewCarSaved()) {
             loadAdminPage(model);
@@ -63,16 +65,16 @@ public class AdminController {
                                 @RequestParam(name = "carId") int id,
                                 @RequestParam(name = "type") String type,
                                 @RequestParam(name = "isAvailable") String isAvailable,
-                                @RequestParam(name = "price") int price) {
+                                @RequestParam(name = "price") int price,
+                                @RequestParam("file") MultipartFile file) {
         String returnPage = "";
 
-        CarDto carDto = adminService.updateCarDto(id, type, isAvailable, price);
+        CarDto carDto = adminService.updateCarDto(id, type, isAvailable, price, file);
 
         if (!carDto.isNewCarSaved()) {
             model.addAttribute("carDto", carDto);
             returnPage = "editcar.html";
-        }
-        else {
+        } else {
             model.addAttribute("carDto", carDto);
             returnPage = "newcar.html";
         }

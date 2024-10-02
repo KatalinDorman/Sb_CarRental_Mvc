@@ -7,7 +7,9 @@ import homework.sb_carrental_mvc.dto.ReservationDto;
 import homework.sb_carrental_mvc.model.Car;
 import homework.sb_carrental_mvc.model.Reservation;
 import lombok.AllArgsConstructor;
+import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,18 +70,20 @@ public class AdminService {
         return carDto;
     }
 
-    private CarDto getCarDto(Integer id, String type, boolean available, int price, boolean isNewCarSaved) {
+    private CarDto getCarDto(Integer id, String type, boolean available, int price, byte[] image, boolean isNewCarSaved) {
         CarDto carDto = null;
 
-        carDto = new CarDto(id, type, available, price, isNewCarSaved);
+        carDto = new CarDto(id, type, available, price, image, isNewCarSaved);
 
         return carDto;
     }
 
 
-    public CarDto prepareCarDto(String type, String isAvailable, int price) {
+    @SneakyThrows
+    public CarDto prepareCarDto(String type, String isAvailable, int price, MultipartFile file) {
         boolean available = false;
         boolean isNewCarSaved = false;
+        byte[] image = file.getBytes();
 
         if (!isAvailable.equals("-")) {
             isNewCarSaved = true;
@@ -87,7 +91,7 @@ public class AdminService {
             available = isAvailable.equals("yes");
         }
 
-        CarDto carDto = getCarDto(0, type, available, price, isNewCarSaved);
+        CarDto carDto = getCarDto(0, type, available, price, image, isNewCarSaved);
 
         if (isNewCarSaved) {
             saveCarDto(carDto);
@@ -96,9 +100,11 @@ public class AdminService {
         return carDto;
     }
 
-    public CarDto updateCarDto(int carId, String type, String isAvailable, int price) {
+    @SneakyThrows
+    public CarDto updateCarDto(int carId, String type, String isAvailable, int price, MultipartFile file) {
         boolean available = false;
         boolean isNewCarSaved = false;
+        byte[] image = file.getBytes();
 
         if (!isAvailable.equals("-")) {
             isNewCarSaved = true;
@@ -110,6 +116,7 @@ public class AdminService {
         carDto.setType(type);
         carDto.setAvailable(available);
         carDto.setPrice(price);
+        carDto.setImage(image);
         carDto.setNewCarSaved(isNewCarSaved);
 
         if (isNewCarSaved) {
@@ -120,7 +127,7 @@ public class AdminService {
     }
 
     private void saveCarDto(CarDto carDto) {
-        Car car = new Car(carDto.getId(), carDto.getType(), carDto.isAvailable(), carDto.getPrice());
+        Car car = new Car(carDto.getId(), carDto.getType(), carDto.isAvailable(), carDto.getPrice(), carDto.getImage());
 
         db.saveCar(car);
     }
@@ -128,7 +135,7 @@ public class AdminService {
     private CarDto convertCarToCarDto(Car car) {
         CarDto carDto = null;
 
-        carDto = new CarDto(car.getId(), car.getType(), car.isAvailable(), car.getPrice());
+        carDto = new CarDto(car.getId(), car.getType(), car.isAvailable(), car.getPrice(), car.getImage());
 
         return carDto;
     }
