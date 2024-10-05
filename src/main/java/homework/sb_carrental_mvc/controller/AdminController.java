@@ -39,12 +39,12 @@ public class AdminController {
 
         if (!carDto.isNewCarSaved()) {
             loadAdminPage(model);
-            model.addAttribute("carDto", carDto);
             returnPage = "admin.html";
         } else {
-            model.addAttribute("carDto", carDto);
             returnPage = "newcar.html";
         }
+
+        model.addAttribute("carDto", carDto);
 
         return returnPage;
     }
@@ -72,12 +72,12 @@ public class AdminController {
         CarDto carDto = adminService.updateCarDto(id, type, isAvailable, price, file);
 
         if (!carDto.isNewCarSaved()) {
-            model.addAttribute("carDto", carDto);
             returnPage = "editcar.html";
         } else {
-            model.addAttribute("carDto", carDto);
             returnPage = "newcar.html";
         }
+
+        model.addAttribute("carDto", carDto);
 
         return returnPage;
     }
